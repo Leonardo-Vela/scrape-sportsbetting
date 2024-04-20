@@ -81,6 +81,8 @@ def page_home():
     colors = ["navy", "lightgray", "darkred"]
 
     plt.figure(figsize=(10, 6))
+    plt.yticks(np.arange(-1, 1.1, 0.1))
+    plt.grid(color='lightgray', linestyle='--', linewidth=0.5, alpha=0.5)
     plt.plot(filtered_data['time_of_day'], filtered_data['prob_win_team_A'], color=colors[0], label=("Win " + selected_team_A))
     plt.plot(filtered_data['time_of_day'], filtered_data['prob_draw'], color=colors[1], label="Draw")
     plt.plot(filtered_data['time_of_day'], filtered_data['prob_win_team_B'], color=colors[2], label=("Win " + selected_team_B))
