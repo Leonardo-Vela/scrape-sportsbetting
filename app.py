@@ -11,27 +11,32 @@ def load_data():
 def main():
     st.title("CSV Data Plotter")
 
-    # Load predefined data
     data = load_data()
 
-    # Display the raw data
-    st.subheader("Raw Data")
-    st.write(data)
+    # Create dropdown for match keys
+    selected_match_key = st.selectbox("Select Match Key", data['match_key'].unique())
 
-    # Select columns for plotting
-    st.sidebar.subheader("Select Columns for Plotting")
-    selected_columns = st.sidebar.multiselect("Select columns", data.columns)
+    # Filter data based on selected match key
+    filtered_data = data[data['match_key'] == selected_match_key]
 
-    if selected_columns:
-        # Plot selected columns
-        st.subheader("Plot")
-        plt.figure(figsize=(10, 6))
-        for column in selected_columns:
-            plt.plot(data.index, data[column], label=column)
-        plt.xlabel("Index")
-        plt.ylabel("Value")
-        plt.legend()
-        st.pyplot()
+    # Convert timestamp to datetime
+    filtered_data['timestamp'] = pd.to_datetime(filtered_data['time_of_day'])
+
+    # Assign team names
+    selected_team_A = filtered_data['name_team_A'][0]
+    selected_team_B = filtered_data['name_team_B'][0]
+
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    plt.plot(filtered_data['time_of_day'], filtered_data['prob_win_team_A'], label=("Win " + selected_team_A))
+    plt.plot(filtered_data['time_of_day'], filtered_data['prob_draw'], label="Draw")
+    plt.plot(filtered_data['time_of_day'], filtered_data['prob_win_team_B'], label=("Win " + selected_team_B))
+    plt.xlabel('Timestamp')
+    plt.ylabel('Win probability')
+    plt.title('Outcome probability of ' + selected_team_A + ' vs. ' + selected_team_B +' over Time')
+    plt.legend()
+    plt.xticks(rotation=45)
+    st.pyplot()
 
 if __name__ == "__main__":
     main()
