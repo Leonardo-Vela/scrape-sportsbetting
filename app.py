@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
+import matplotlib.dates as mdates
 
 # Load predefined CSV data
 @st.cache
@@ -83,15 +84,17 @@ def page_home():
     plt.figure(figsize=(10, 6))
     plt.yticks(np.arange(-1, 1.1, 0.1))
     plt.grid(color='lightgray', linestyle='--', linewidth=0.5, alpha=0.5)
-    plt.plot(filtered_data['time_of_day'], filtered_data['prob_win_team_A'], color=colors[0], label=("Win " + selected_team_A))
-    plt.plot(filtered_data['time_of_day'], filtered_data['prob_draw'], color=colors[1], label="Draw")
-    plt.plot(filtered_data['time_of_day'], filtered_data['prob_win_team_B'], color=colors[2], label=("Win " + selected_team_B))
+    plt.plot(filtered_data['gametime'], filtered_data['prob_win_team_A'], color=colors[0], label=("Win " + selected_team_A))
+    plt.plot(filtered_data['gametime'], filtered_data['prob_draw'], color=colors[1], label="Draw")
+    plt.plot(filtered_data['gametime'], filtered_data['prob_win_team_B'], color=colors[2], label=("Win " + selected_team_B))
     plt.xlabel('Time')
     plt.ylabel('Win probability')
     plt.title('Outcome probability of ' + selected_team_A + ' vs. ' + selected_team_B +' over time')
     plt.legend()
-    plt.xticks(rotation=45)
+    #plt.xticks(rotation=45)
     plt.ylim(0, 1)
+    #plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+    #plt.gca().xaxis.set_major_locator(mdates.MinuteLocator(interval=1))
     st.pyplot()
 
 
