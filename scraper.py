@@ -5,7 +5,6 @@ import datetime
 import pandas as pd
 import time
 
-from utils.odds import calc_probs
 from utils.scraping import get_soup
 from utils.scraping import extract_snapshot
 
@@ -17,7 +16,7 @@ soup = get_soup(url)
 scraped_data = []
 
 # Define the duration for which you want the script to run (in seconds)
-duration =   60 # Run for 1 hour (adjust as needed)
+duration =   120 # Run for 1 hour (adjust as needed)
 
 # Start time
 start_time = time.time()

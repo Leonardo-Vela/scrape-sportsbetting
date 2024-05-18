@@ -5,6 +5,8 @@ import datetime
 import pandas as pd
 import time
 
+from utils.odds import calc_probs
+
 
 def get_soup(url):
     # Configure Chrome options for headless mode
@@ -42,7 +44,7 @@ def extract_snapshot(soup):
     #columns = ['primary_key', 'name_team_A', 'name_team_B', 'gametime', 'score_team_A', 'score_team_B', 'odd_win_team_A', 'odd_draw', 'odd_win_team_B']
     data = []
     if len(event_tags) != 0:
-        print("Tastes good ...")
+        print("Tastes good !!!")
         for event in event_tags:
             try:
                 team_names= event.select('span.EventTeams-styles-module-team-title')
@@ -88,7 +90,6 @@ def extract_snapshot(soup):
                     }
                 
                 data.append(row_data)
-                print(row_data)
                 
             except:
                 pass
