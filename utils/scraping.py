@@ -1,17 +1,32 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from bs4 import BeautifulSoup
 import datetime
 import pandas as pd
 import time
 
-from utils.odds import calc_probs
+from .odds import calc_probs
 
 
 def get_soup(url):
     # Configure Chrome options for headless mode
+    print("--------------")
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Run Chrome in headless mode
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    chrome_options.add_argument("--start-maximized")  # Start in maximized mode
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Hide automation
+    chrome_options.add_argument('--disable-http2')
+
+     # Add headers via DesiredCapabilities
+    caps = DesiredCapabilities.CHROME
+    caps["goog:loggingPrefs"] = {"performance": "ALL"}  # Optional: Log network events
+    caps["pageLoadStrategy"] = "eager"  # Speeds up loading by waiting less
+    chrome_options.headless = False
     # Create a new instance of the Chrome WebDriver
     driver = webdriver.Chrome(options=chrome_options)
     # Navigate to the URL
@@ -52,7 +67,7 @@ def extract_snapshot(soup):
                 score_tags = event.select_one('div.EventScores-styles-module-scores')
                 score_list = [char for char in [score.get_text(strip=True) for score in  score_tags][-1]]
                 team_names_list = [name.get_text(strip=True) for name in  team_names]
-                event_id = str.replace(team_names_list[0] + "_versus_" + team_names_list[1], " ", "_")
+                event_id = str.replace(team_names_list[0] + " vs. " + team_names_list[1], " ", " ")
                 # Get current date and time
                 current_datetime = datetime.datetime.now()
                 current_date = datetime.date.today()
